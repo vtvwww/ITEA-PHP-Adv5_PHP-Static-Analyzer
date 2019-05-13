@@ -55,7 +55,10 @@ final class ClassInfo
                         $result['class_type'] .= '"' . str_replace(['is'], '', $item) . '"' . ', ';
                     }
                 }
-                $result['class_type'] = \trim($result['class_type'], ' ,');
+
+                if (empty($result['class_type'])){
+                    $result['class_type'] = '"Normal"';
+                }else $result['class_type'] = \trim($result['class_type'], ' ,');
 
 
                 // Get Properties
