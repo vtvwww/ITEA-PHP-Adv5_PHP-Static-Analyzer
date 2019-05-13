@@ -2,62 +2,90 @@
 
 namespace Vtvwww\StaticAnalyzer\Analyzer;
 
-use Symfony\Component\Finder\Finder;
+use Vtvwww\Tests\SomeClasses\TestClass;
 
+include __DIR__ . '/../../tests/TestClass.php';
 /**
- * Analyzer that provides number of classes, interfaces and trait created by needed developer.
+ * Analyzer that provides number of properties and methods.
  *
- * @author Vladimir Kuprienko <vldmr.kuprienko@gmail.com>
+ * @author Vladimir Tverdohleb <vtv.www@gmail.com>
  */
 final class ClassInfo
 {
-    private $projectDir;
-    private $developerEmail;
+    /**
+     * @var string The class that is being analyzed
+     */
+    private $class;
 
-    public function __construct(string $projectDir, string $developerEmail)
+    public function __construct(string $class)
     {
-        $this->projectDir = $projectDir;
-        $this->developerEmail = $developerEmail;
+        $this->class = $class;
     }
 
-    public function analyze(): int
+    /**
+     * Method analyzing the received class
+     *
+     * @return array|null
+     */
+    public function analyze(): ?array
     {
-        /* @var \Symfony\Component\Finder\SplFileInfo[] $finder */
-        $finder = Finder::create()
-            ->in($this->projectDir)
-            ->files()
-            ->name('/^[A-Z].+\.php$/')
-        ;
+        $class = new $this->class();
 
-        $docBlockFactory =  DocBlockFactory::createInstance();
+        $result = [
+            'class_name' => '',
+            'class_type' => '',
+            'properties_public' => 0,
+            'properties_protected' => 0,
+            'properties_private' => 0,
+            'methods_public' => 0,
+            'methods_protected' => 0,
+            'methods_private' => 0,
+        ];
 
-        $counter = 0;
-
-        foreach ($finder as $file) {
-            $namespace = ClassInfoHelper::getFullClassNameFromFile($file->getPathname());
-
+        if (!is_object($class)) return null;
             try {
-                $reflector = new \ReflectionClass($namespace);
-            } catch (\ReflectionException $e) {
-                continue;
-            }
+                $reflector = new \ReflectionClass($class);
 
-            if (!$docComment = $reflector->getDocComment()) {
-                continue;
-            }
+                // Get Name
+                $result['class_name'] = $reflector->getName();
 
-            $docBlock = $docBlockFactory->create($docComment);
-
-            /* @var \phpDocumentor\Reflection\DocBlock\Tags\Author[] $authors */
-            $authors = $docBlock->getTagsByName('author');
-
-            foreach ($authors as $author) {
-                if ($author->getEmail() === $this->developerEmail) {
-                    ++$counter;
+                // Get Class type
+                foreach (['isFinal', 'isIterable', ] as $item) {
+                    if ($reflector->$item()){
+                        $result['class_type'] .= '"' . str_replace(['is'], '', $item) . '"' . ', ';
+                    }
                 }
-            }
-        }
+                $result['class_type'] = \trim($result['class_type'], ' ,');
 
-        return $counter;
+
+                // Get Properties
+                if ($reflector->getProperties()){
+                    foreach ($reflector->getProperties() as $property){
+                        foreach (['public', 'protected', 'private'] as $t){
+                            $func = 'is' . $t;
+                            if ($property->$func()) {
+                                $result['properties_' . $t]++;
+                            }
+                        }
+                    }
+                }
+
+                // Get Methods
+                if ($reflector->getMethods()){
+                    foreach ($reflector->getMethods() as $method){
+                        foreach (['public', 'protected', 'private'] as $t){
+                            $func = 'is' . $t;
+                            if ($method->$func()) {
+                                $result['methods_' . $t]++;
+                            }
+                        }
+                    }
+                }
+
+            } catch (\ReflectionException $e) {
+                die('Class ' . $this->class . 'not found!');
+            }
+
+        return $result;
     }
 }
