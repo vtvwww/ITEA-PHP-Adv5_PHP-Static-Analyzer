@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the "PHP Static Analyzer" project.
+ *
+ * (c) Vladimir Tverdohleb <vtv.www@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Vtvwww\StaticAnalyzer\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -45,19 +54,21 @@ class ClassInfoStat extends Command
 
         $resultClassInfo = $analyzer->analyze();
 
-        if ($resultClassInfo !== null){
+        if (null !== $resultClassInfo) {
             $output->writeln(\str_replace(
-                \array_map( function ($i) { return '{{' . $i . '}}'; }, \array_keys($resultClassInfo)),
+                \array_map(function ($i) {
+                    return '{{' . $i . '}}';
+                }, \array_keys($resultClassInfo)),
                 $resultClassInfo,
-                'Class: {{class_name}} is {{class_type}}' . PHP_EOL .
-                'Properties:' . PHP_EOL .
-                '    public: {{properties_public}}' . PHP_EOL .
-                '    protected: {{properties_protected}}' . PHP_EOL .
-                '    private: {{properties_private}}' . PHP_EOL .
-                'Methods:' . PHP_EOL .
-                '    public: {{methods_public}}' . PHP_EOL .
-                '    protected: {{methods_protected}}' . PHP_EOL .
-                '    private: {{methods_private}}' . PHP_EOL
+                'Class: {{class_name}} is {{class_type}}' . \PHP_EOL .
+                'Properties:' . \PHP_EOL .
+                '    public: {{properties_public}}' . \PHP_EOL .
+                '    protected: {{properties_protected}}' . \PHP_EOL .
+                '    private: {{properties_private}}' . \PHP_EOL .
+                'Methods:' . \PHP_EOL .
+                '    public: {{methods_public}}' . \PHP_EOL .
+                '    protected: {{methods_protected}}' . \PHP_EOL .
+                '    private: {{methods_private}}' . \PHP_EOL
             ));
         }
     }
