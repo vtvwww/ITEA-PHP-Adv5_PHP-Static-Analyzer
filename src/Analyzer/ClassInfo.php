@@ -11,7 +11,6 @@
 
 namespace Vtvwww\StaticAnalyzer\Analyzer;
 
-include __DIR__ . '/../../tests/TestClass.php';
 /**
  * Analyzer that provides number of properties and methods.
  *

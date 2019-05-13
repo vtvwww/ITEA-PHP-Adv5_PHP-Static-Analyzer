@@ -22,8 +22,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Greeflas\\StaticAnalyzer\\": "src/",
-      "Vtvwww\\StaticAnalyzer\\": "src/"
+      "Greeflas\\StaticAnalyzer\\": "src/"
     }
   },
   "autoload-dev": {
