@@ -1,14 +1,20 @@
 <?php
 
+/*
+ * This file is part of the "PHP Static Analyzer" project.
+ *
+ * (c) Vladimir Kuprienko <vldmr.kuprienko@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Greeflas\StaticAnalyzer\Model;
-
 
 /**
  * Class ClassInfoModel
  *
  * Container class - used to store information about Class
- * @package Greeflas\StaticAnalyzer\Model
  */
 class ClassInfoModel
 {
@@ -37,23 +43,29 @@ class ClassInfoModel
      * Add Class name
      *
      * @param string $name
+     *
      * @return ClassInfoModel
      */
-    public function addName (string $name) : self {
+    public function addName(string $name): self
+    {
         $this->class_data['class_name'] = $name;
+
         return $this;
     }
 
     /**
      * Add Class type (abstract|final)
      *
-     * @param string|null $type
+     * @param null|string $type
+     *
      * @return ClassInfoModel
      */
-    public function addType (?string $type) : self {
-        if (!is_null($type)){
+    public function addType(?string $type): self
+    {
+        if (null !== $type) {
             $this->class_data['class_type'][] = $type;
         }
+
         return $this;
     }
 
@@ -61,10 +73,13 @@ class ClassInfoModel
      * Add a new property
      *
      * @param string $type
+     *
      * @return $this
      */
-    public function addProperty (string $type) : self {
+    public function addProperty(string $type): self
+    {
         $this->class_data['properties_' . $type]++;
+
         return $this;
     }
 
@@ -72,10 +87,13 @@ class ClassInfoModel
      * Add a new method
      *
      * @param string $type
+     *
      * @return $this
      */
-    public function addMethod (string $type) : self {
+    public function addMethod(string $type): self
+    {
         $this->class_data['methods_' . $type]++;
+
         return $this;
     }
 
@@ -84,9 +102,11 @@ class ClassInfoModel
      *
      * @return array
      */
-    public function getInfo (){
+    public function getInfo()
+    {
         $result = $this->class_data;
-        $result['class_type'] = (empty($result['class_type'])) ? 'normal' :  implode(', ', $result['class_type']);
+        $result['class_type'] = (empty($result['class_type'])) ? 'normal' : \implode(', ', $result['class_type']);
+
         return $result;
     }
 }

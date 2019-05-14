@@ -11,7 +11,7 @@
 
 namespace Greeflas\StaticAnalyzer\Analyzer;
 
-use \Greeflas\StaticAnalyzer\Model\ClassInfoModel;
+use Greeflas\StaticAnalyzer\Model\ClassInfoModel;
 use Greeflas\StaticAnalyzer\Exception\ClassInfoReflactionException;
 
 /**
@@ -29,14 +29,15 @@ final class ClassInfo
     public function __construct(string $class_name)
     {
         $this->class_name = $class_name;
-
     }
 
     /**
      * Method analyzing the received class
-     * @return null|array
      *
      * @throws ClassInfoReflactionException
+     *
+     * @return null|array
+     *
      */
     public function analyze(): ?array
     {
@@ -58,6 +59,7 @@ final class ClassInfo
                 foreach ($reflector->getProperties() as $property) {
                     foreach (['public', 'protected', 'private'] as $t) {
                         $func = 'is' . $t;
+
                         if ($property->$func()) {
                             $class_data->addProperty($t);
                         }
@@ -79,9 +81,8 @@ final class ClassInfo
             }
 
             $result = $class_data->getInfo();
-
         } catch (ClassInfoReflactionException $e) {
-            echo $e->getMessage() . PHP_EOL;
+            echo $e->getMessage() . \PHP_EOL;
         }
 
         return $result;

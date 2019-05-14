@@ -3,7 +3,7 @@
 /*
  * This file is part of the "PHP Static Analyzer" project.
  *
- * (c) Vladimir Tverdohleb <vtv.www@gmail.com>
+ * (c) Vladimir Kuprienko <vldmr.kuprienko@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,7 +12,8 @@
 namespace Greeflas\StaticAnalyzer\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\{InputArgument, InputInterface};
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Greeflas\StaticAnalyzer\Analyzer\ClassInfo;
 
@@ -55,9 +56,12 @@ class ClassInfoStat extends Command
 
         if (null !== $resultClassInfo) {
             $output->writeln(
-                \str_replace(\array_map(function ($i) { return '{{' . $i . '}}'; }, \array_keys($resultClassInfo)),
-                $resultClassInfo,
-                'Class: {{class_name}} is {{class_type}}' . \PHP_EOL .
+                \str_replace(
+                    \array_map(function ($i) {
+                        return '{{' . $i . '}}';
+                    }, \array_keys($resultClassInfo)),
+                    $resultClassInfo,
+                    'Class: {{class_name}} is {{class_type}}' . \PHP_EOL .
                 'Properties:' . \PHP_EOL .
                 '    public: {{properties_public}}' . \PHP_EOL .
                 '    protected: {{properties_protected}}' . \PHP_EOL .
@@ -66,7 +70,8 @@ class ClassInfoStat extends Command
                 '    public: {{methods_public}}' . \PHP_EOL .
                 '    protected: {{methods_protected}}' . \PHP_EOL .
                 '    private: {{methods_private}}' . \PHP_EOL
-            ));
+            )
+            );
         }
     }
 }
