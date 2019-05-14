@@ -2,7 +2,7 @@
 <?php
 
 use Greeflas\StaticAnalyzer\Command\ClassAuthorStat;
-use Vtvwww\StaticAnalyzer\Command\ClassInfoStat;
+use Greeflas\StaticAnalyzer\Command\ClassInfoStat;
 
 use Symfony\Component\Console\Application;
 

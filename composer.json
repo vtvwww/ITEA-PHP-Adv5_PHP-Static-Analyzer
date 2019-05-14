@@ -27,7 +27,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Vtvwww\\Tests\\": "tests/"
+      "Vtvwww\\Tests\\Fixtures\\": "tests/"
     }
   },
   "scripts": {

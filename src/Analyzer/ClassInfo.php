@@ -9,7 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Vtvwww\StaticAnalyzer\Analyzer;
+namespace Greeflas\StaticAnalyzer\Analyzer;
+
+use \Greeflas\StaticAnalyzer\Model\ClassInfoModel;
+use Greeflas\StaticAnalyzer\Exception\ClassInfoReflactionException;
 
 /**
  * Analyzer that provides number of properties and methods.
@@ -21,64 +24,42 @@ final class ClassInfo
     /**
      * @var string The class that is being analyzed
      */
-    private $class;
+    private $class_name;
 
-    public function __construct(string $class)
+    public function __construct(string $class_name)
     {
-        $this->class = $class;
+        $this->class_name = $class_name;
+
     }
 
     /**
      * Method analyzing the received class
-     *
      * @return null|array
+     *
+     * @throws ClassInfoReflactionException
      */
     public function analyze(): ?array
     {
-        $class = new $this->class();
+        $result = null;
 
-        $result = [
-            'class_name' => '',
-            'class_type' => '',
-            'properties_public' => 0,
-            'properties_protected' => 0,
-            'properties_private' => 0,
-            'methods_public' => 0,
-            'methods_protected' => 0,
-            'methods_private' => 0,
-        ];
-
-        if (!\is_object($class)) {
-            return null;
-        }
         try {
-            $reflector = new \ReflectionClass($class);
+            $reflector = new \ReflectionClass($this->class_name);
 
-            // Get Name
-            $result['class_name'] = $reflector->getName();
+            $class_data = new ClassInfoModel();
 
-            // Get Class type
-            foreach (['isFinal', 'isIterable'] as $item) {
-                if ($reflector->$item()) {
-                    $result['class_type'] .= '"' . \str_replace(['is'], '', $item) . '"' . ', ';
-                }
-            }
-
-            if (empty($result['class_type'])) {
-                $result['class_type'] = '"Normal"';
-            } else {
-                $result['class_type'] = \trim($result['class_type'], ' ,');
-            }
-
+            $class_data
+                ->addName($reflector->getName())
+                ->addType($reflector->isFinal() ? 'final' : null)
+                ->addType($reflector->isAbstract() ? 'abstract' : null)
+            ;
 
             // Get Properties
             if ($reflector->getProperties()) {
                 foreach ($reflector->getProperties() as $property) {
                     foreach (['public', 'protected', 'private'] as $t) {
                         $func = 'is' . $t;
-
                         if ($property->$func()) {
-                            $result['properties_' . $t]++;
+                            $class_data->addProperty($t);
                         }
                     }
                 }
@@ -91,13 +72,16 @@ final class ClassInfo
                         $func = 'is' . $t;
 
                         if ($method->$func()) {
-                            $result['methods_' . $t]++;
+                            $class_data->addMethod($t);
                         }
                     }
                 }
             }
-        } catch (\ReflectionException $e) {
-            die('Class ' . $this->class . 'not found!');
+
+            $result = $class_data->getInfo();
+
+        } catch (ClassInfoReflactionException $e) {
+            echo $e->getMessage() . PHP_EOL;
         }
 
         return $result;

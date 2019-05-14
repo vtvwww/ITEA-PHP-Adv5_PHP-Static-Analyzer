@@ -9,13 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Vtvwww\StaticAnalyzer\Command;
+namespace Greeflas\StaticAnalyzer\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\{InputArgument, InputInterface};
 use Symfony\Component\Console\Output\OutputInterface;
-use Vtvwww\StaticAnalyzer\Analyzer\ClassInfo;
+use Greeflas\StaticAnalyzer\Analyzer\ClassInfo;
 
 /**
  * Command for getting short information about specify Class
@@ -55,10 +54,8 @@ class ClassInfoStat extends Command
         $resultClassInfo = $analyzer->analyze();
 
         if (null !== $resultClassInfo) {
-            $output->writeln(\str_replace(
-                \array_map(function ($i) {
-                    return '{{' . $i . '}}';
-                }, \array_keys($resultClassInfo)),
+            $output->writeln(
+                \str_replace(\array_map(function ($i) { return '{{' . $i . '}}'; }, \array_keys($resultClassInfo)),
                 $resultClassInfo,
                 'Class: {{class_name}} is {{class_type}}' . \PHP_EOL .
                 'Properties:' . \PHP_EOL .

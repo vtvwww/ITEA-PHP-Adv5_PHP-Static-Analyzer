@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Vtvwww\Tests\SomeClasses;
+namespace Vtvwww\Tests\Fixtures;
 
-final class TestClass implements \Iterator
+abstract class TestClass implements \Iterator
 {
     private static $param11 = '';
     private static $param12 = '';
@@ -44,68 +44,30 @@ final class TestClass implements \Iterator
         // TODO: Implement __destruct() method.
     }
 
-    /**
-     * Return the current element
-     *
-     * @link https://php.net/manual/en/iterator.current.php
-     *
-     * @return mixed Can return any type.
-     *
-     * @since 5.0.0
-     */
     public function current()
     {
         // TODO: Implement current() method.
     }
 
-    /**
-     * Move forward to next element
-     *
-     * @link https://php.net/manual/en/iterator.next.php
-     * @since 5.0.0
-     */
     public function next()
     {
         // TODO: Implement next() method.
     }
 
-    /**
-     * Return the key of the current element
-     *
-     * @link https://php.net/manual/en/iterator.key.php
-     *
-     * @return mixed scalar on success, or null on failure.
-     *
-     * @since 5.0.0
-     */
     public function key()
     {
         // TODO: Implement key() method.
     }
 
-    /**
-     * Checks if current position is valid
-     *
-     * @link https://php.net/manual/en/iterator.valid.php
-     *
-     * @return bool The return value will be casted to boolean and then evaluated.
-     * Returns true on success or false on failure.
-     *
-     * @since 5.0.0
-     */
     public function valid()
     {
         // TODO: Implement valid() method.
     }
 
-    /**
-     * Rewind the Iterator to the first element
-     *
-     * @link https://php.net/manual/en/iterator.rewind.php
-     * @since 5.0.0
-     */
     public function rewind()
     {
         // TODO: Implement rewind() method.
     }
+
+    abstract function getName();
 }
